@@ -17,7 +17,7 @@ class Structured_Data {
 	 */
 	public function __construct() {
 		add_action( 'after_setup_theme', array( __CLASS__, 'structured_data_image_sizes' ) );
-		add_action( 'wp_head', array( __CLASS__, 'render_structured_data' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'render_structured_data' ) );
 	}
 
 	/**
