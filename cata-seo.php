@@ -30,5 +30,7 @@ new Structured_Data();
  * Jetpack Settings
  */
 require_once __DIR__ . '/includes/jetpack-settings/class-jetpack-settings.php';
+require_once __DIR__ . '/includes/jetpack-settings/share-image/class-share-image.php';
 
 new Jetpack_Settings();
+new Jetpack_Settings\Share_Image();
