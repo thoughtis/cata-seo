@@ -25,3 +25,10 @@ namespace Cata\SEO;
 require_once __DIR__ . '/includes/structured-data/class-structured-data.php';
 
 new Structured_Data();
+
+/**
+ * Jetpack Settings
+ */
+require_once __DIR__ . '/includes/jetpack-settings/class-jetpack-settings.php';
+
+new Jetpack_Settings();
