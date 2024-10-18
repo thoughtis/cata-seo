@@ -34,3 +34,10 @@ require_once __DIR__ . '/includes/jetpack-settings/share-image/class-share-image
 
 new Jetpack_Settings();
 new Jetpack_Settings\Share_Image();
+
+/**
+ * Robots
+ */
+require_once __DIR__ . '/includes/robots/class-robots.php';
+
+new Robots();

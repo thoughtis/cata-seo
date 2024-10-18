@@ -18,15 +18,18 @@ class Share_Image {
 	 * Construct
 	 */
 	public function __construct() {
-		add_filter( 'jetpack_open_graph_tags', array( __CLASS__, 'add_homepage_share_image' ) );
-		add_filter( 'jetpack_twitter_cards_image_default', array( __CLASS__, 'get_homepage_share_image_url' ) );
-
 		/**
 		 * Add share image setting to customizer
 		 */
 		add_action( 'customize_register', array( __CLASS__, 'add_share_image' ), 10 );
 		add_action( 'customize_register', array( __CLASS__, 'add_customizer_section' ), 10 );
 		add_action( 'customize_register', array( __CLASS__, 'add_share_image_setting' ), 20 );
+
+		/**
+		 * Use share image
+		 */
+		add_filter( 'jetpack_open_graph_tags', array( __CLASS__, 'add_homepage_share_image' ) );
+		add_filter( 'jetpack_twitter_cards_image_default', array( __CLASS__, 'get_homepage_share_image_url' ) );
 	}
 
 	/**
