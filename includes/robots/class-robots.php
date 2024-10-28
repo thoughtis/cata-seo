@@ -27,13 +27,6 @@ class Robots {
 	 */
 	public function __construct() {
 		/**
-		 * Only apply to public sites
-		 */
-		if ( 1 !== absint( get_option( 'blog_public' ) ) ) {
-			return;
-		}
-
-		/**
 		 * Noindex
 		 */
 		add_filter( 'wp_robots', array( __CLASS__, 'noindex_attachments' ) );
