@@ -197,7 +197,7 @@ class Structured_Data {
 	 * @return array
 	 */
 	public static function get_breadcrumb_data(): array {
-		$crumbs = apply_filters( 'cata_structured_data_breadcrumbs', array(), get_the_ID() );
+		$crumbs = apply_filters( 'cata_breadcrumbs_get_crumbs', array(), get_the_ID() );
 	
 		if ( empty( $crumbs ) ) {
 			return array();
