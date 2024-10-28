@@ -56,11 +56,11 @@ class Share_Image {
 	 */
 	public static function add_customizer_section( WP_Customize_Manager $wp_customize ): void {
 		/**
-		 * Add a Customizer Section for Creepy Catalog theme.
+		 * Add a Customizer Section for share image theme.
 		 */
 		$section_options = array(
 			'title'       => __( 'Homepage' ),
-			'description' => __( 'Settings used by the Creepy Catalog theme.' ),
+			'description' => __( 'Settings used by the Cata SEO plugin.' ),
 			'capability'  => 'edit_theme_options',
 			'panel'       => 'cata_seo_jetpack_settings_share_image_panel',
 		);
