@@ -31,12 +31,6 @@ class Jetpack_Settings {
 		 */
 		add_filter( 'jetpack_sitemap_image_skip_post', array( __CLASS__, 'jetpack_sitemap_image_skip_orphans' ), 10, 2 );
 		add_filter( 'jetpack_sitemap_image_skip_post', array( __CLASS__, 'jetpack_sitemap_image_skip_reusable_blocks' ), 12, 2 );
-
-		/**
-		 * Remove Concatenated Jetpack CSS
-		 */
-		add_action( 'wp_print_styles', array( __CLASS__, 'remove_jetpack_css' ), 1 );
-		add_action( 'wp_print_footer_scripts', array( __CLASS__, 'remove_jetpack_css' ), 1 );
 	}
 
 	/**
@@ -79,13 +73,6 @@ class Jetpack_Settings {
 				'description' => $proposed,
 			)
 		);
-	}
-	
-	/**
-	 * Remove Jetpack CSS
-	 */
-	public static function remove_jetpack_css(): void {
-		wp_dequeue_style( 'jetpack_css' );
 	}
 
 	/**
