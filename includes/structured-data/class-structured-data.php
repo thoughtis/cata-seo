@@ -255,6 +255,11 @@ class Structured_Data {
 	 * @return array
 	 */
 	public static function get_author_list(): array {
+		// Bail if Co-Authors Plus isn't enabled
+		if ( ! function_exists( 'get_coauthors' ) ) {
+			return array();
+		}
+
 		// get_coauthors.
 		$coauthor_info = get_coauthors();
 
