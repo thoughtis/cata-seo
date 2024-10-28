@@ -68,7 +68,7 @@ class Structured_Data {
 			$structured_data = [ ...$structured_data, ...self::get_post_data() ];
 		}
 
-		if ( is_singular( 'post' ) ) {
+		if ( is_singular( 'post' ) || has_post_parent() ) {
 			$structured_data = [ ...$structured_data, ...self::get_breadcrumb_data() ];
 		}
 
