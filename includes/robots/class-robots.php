@@ -17,7 +17,7 @@ class Robots {
 	 *
 	 * @var array
 	 */
-	const NO_INDEX_FOLLOW = array( 
+	const NOINDEX_FOLLOW = array( 
 		'noindex' => true, 
 		'follow'  => true,
 	);
@@ -59,7 +59,7 @@ class Robots {
 		if ( ! is_attachment() ) {
 			return $robots_array;
 		}
-		return array_merge( $robots_array, self::NO_INDEX_FOLLOW );
+		return array_merge( $robots_array, self::NOINDEX_FOLLOW );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Robots {
 		if ( ! is_paged() ) {
 			return $robots_array;
 		}
-		return array_merge( $robots_array, self::NO_INDEX_FOLLOW );
+		return array_merge( $robots_array, self::NOINDEX_FOLLOW );
 	}
 
 	/**
@@ -87,7 +87,7 @@ class Robots {
 		if ( empty( $_GET ) ) {
 			return $robots_array;
 		}
-		return array_merge( $robots_array, self::NO_INDEX_FOLLOW );
+		return array_merge( $robots_array, self::NOINDEX_FOLLOW );
 	}
 
 	/**
