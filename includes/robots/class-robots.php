@@ -112,7 +112,7 @@ class Robots {
 	}
 
 	/**
-	 * Feeds
+	 * Disallow Feeds
 	 * 
 	 * Disallow RSS feeds in robots.txt
 	 *
@@ -120,7 +120,7 @@ class Robots {
 	 * 
 	 * @return string
 	 */
-	public static function feeds( string $robots ): string {
+	public static function disallow_feeds( string $robots ): string {
 		return $robots . "Disallow: */feed/\n";
 	}
 }
