@@ -286,7 +286,7 @@ class Structured_Data {
 	 * @return string
 	 */
 	private static function get_type( int $post_id ): string {
-		return has_category( 'news', $post_id ) ? 'NewsArticle' : 'BlogPosting';
+		return has_category( 'news', $post_id ) ? 'NewsArticle' : 'Article';
 	}
 
 	/**
