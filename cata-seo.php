@@ -31,9 +31,11 @@ new Structured_Data();
  */
 require_once __DIR__ . '/includes/jetpack-settings/class-jetpack-settings.php';
 require_once __DIR__ . '/includes/jetpack-settings/share-image/class-share-image.php';
+require_once __DIR__ . '/includes/jetpack-settings/portrait-share-image/class-portrait-share-image.php';
 
 new Jetpack_Settings();
 new Jetpack_Settings\Share_Image();
+new Jetpack_Settings\Portrait_Share_Image();
 
 /**
  * Robots
