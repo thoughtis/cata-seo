@@ -12,7 +12,7 @@
  * Description: Adds features related to search indexing and structured data.
  * Author:      Thought & Expression Co. <devjobs@thought.is>
  * Author URI:  https://thought.is
- * Version:     0.1.1
+ * Version:     0.1.2
  * License:     GPL v3 or later
  * License URI: http://www.gnu.org/licenses/gpl-3.0.txt
  */
@@ -31,9 +31,11 @@ new Structured_Data();
  */
 require_once __DIR__ . '/includes/jetpack-settings/class-jetpack-settings.php';
 require_once __DIR__ . '/includes/jetpack-settings/share-image/class-share-image.php';
+require_once __DIR__ . '/includes/jetpack-settings/portrait-share-image/class-portrait-share-image.php';
 
 new Jetpack_Settings();
 new Jetpack_Settings\Share_Image();
+new Jetpack_Settings\Portrait_Share_Image();
 
 /**
  * Robots
