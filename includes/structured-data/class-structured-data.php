@@ -62,10 +62,39 @@ class Structured_Data {
 
 		if ( is_front_page() ) {
 			$structured_data = [ ...$structured_data, ...self::get_organization_data() ];
+
+			/**
+			 * Whether to emit WebSite data and identify its Organization publisher.
+			 *
+			 * @param bool $enabled Whether the site opts into the WebSite schema.
+			 */
+			if ( apply_filters( 'cata_seo_website_schema', false ) ) {
+				$home_url          = home_url( '/' );
+				$structured_data[] = array(
+					'@context'  => 'https://schema.org',
+					'@type'     => 'WebSite',
+					'@id'       => $home_url . '#website',
+					'name'      => get_bloginfo( 'name' ),
+					'url'       => $home_url,
+					'publisher' => array(
+						'@id' => $home_url . '#organization',
+					),
+				);
+			}
 		}
 
-		if ( is_singular( 'post' ) && has_post_thumbnail() ) {
-			$structured_data = [ ...$structured_data, ...self::get_post_data() ];
+		if ( is_singular( 'post' ) ) {
+			/**
+			 * Whether an article needs a featured image to receive structured data.
+			 *
+			 * @param bool $requires_image Whether a featured image is required.
+			 * @param int  $post_id        The current post ID.
+			 */
+			$requires_image = apply_filters( 'cata_seo_article_requires_image', true, get_the_ID() );
+
+			if ( has_post_thumbnail() || ! $requires_image ) {
+				$structured_data = [ ...$structured_data, ...self::get_post_data() ];
+			}
 		}
 
 		if ( is_singular( 'post' ) || has_post_parent() ) {
@@ -90,7 +119,7 @@ class Structured_Data {
 
 		$org_data = array(
 			array(
-				'@context'      => 'http://schema.org',
+				'@context'      => 'https://schema.org',
 				'@type'         => 'Organization',
 				'name'          => $blog_info,
 				'alternateName' => 'The Thought & Expression Company, Inc.',
@@ -127,6 +156,18 @@ class Structured_Data {
 			),
 		);
 
+		/** This filter is documented in get_structured_data(). */
+		if ( apply_filters( 'cata_seo_website_schema', false ) ) {
+			$org_data[0]['@id'] = home_url( '/' ) . '#organization';
+		}
+
+		/**
+		 * Filter the site's Organization node before it is returned.
+		 *
+		 * @param array $organization The Organization structured data.
+		 */
+		$org_data[0] = apply_filters( 'cata_seo_organization_data', $org_data[0] );
+
 		return $org_data;
 	}
 
@@ -144,11 +185,14 @@ class Structured_Data {
 
 		// post obj contains the data needed for the headline, dates, and ID.
 		$post_object    = get_post();
-		$post_headline  = $post_object->post_title;
-		$post_published = str_replace( ' ', 'T', $post_object->post_date_gmt );
-		$post_modified  = str_replace( ' ', 'T', $post_object->post_modified_gmt );
+		$post_headline  = html_entity_decode( wp_strip_all_tags( $post_object->post_title ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$post_published = get_post_datetime( $post_object, 'date', 'gmt' );
+		$post_modified  = get_post_datetime( $post_object, 'modified', 'gmt' );
 		$post_id        = $post_object->ID;
 		$post_permalink = get_permalink( $post_id );
+
+		// WordPress returns the site timezone even when it reads the GMT fields.
+		$utc = new \DateTimeZone( 'UTC' );
 
 		// images with hard crops for required sizes.
 		$post_image_1x1  = wp_get_attachment_image_url( get_post_thumbnail_id( $post_id ), 'structured-1x1' );
@@ -160,20 +204,24 @@ class Structured_Data {
 
 		$post_data = array(
 			array(
-				'@context'         => 'http://www.schema.org',
+				'@context'         => 'https://schema.org',
 				'@type'            => self::get_type( $post_id ),
 				'mainEntityOfPage' => array(
-					'@type' => 'Webpage',
+					'@type' => 'WebPage',
 					'@id'   => $post_permalink,
 				),
 				'headline'         => $post_headline,
-				'image'            => array(
-					$post_image_1x1,
-					$post_image_4x3,
-					$post_image_16x9,
+				'image'            => array_values(
+					array_filter(
+						array(
+							$post_image_1x1,
+							$post_image_4x3,
+							$post_image_16x9,
+						)
+					)
 				),
-				'datePublished'    => $post_published,
-				'dateModified'     => $post_modified,
+				'datePublished'    => $post_published ? $post_published->setTimezone( $utc )->format( DATE_W3C ) : false,
+				'dateModified'     => $post_modified ? $post_modified->setTimezone( $utc )->format( DATE_W3C ) : false,
 				'author'           => $author_list,
 				'publisher'        => array(
 					'@type' => 'Organization',
@@ -185,6 +233,12 @@ class Structured_Data {
 				),
 			),
 		);
+
+		foreach ( array( 'image', 'datePublished', 'dateModified' ) as $key ) {
+			if ( empty( $post_data[0][ $key ] ) ) {
+				unset( $post_data[0][ $key ] );
+			}
+		}
 
 		return $post_data;
 	}
@@ -306,7 +360,7 @@ class Structured_Data {
 				return array(
 					'@type'    => 'ListItem',
 					'position' => $key + 1,
-					'name' => $crumb['title'],
+					'name' => html_entity_decode( wp_strip_all_tags( $crumb['title'] ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
 					'item'  => $crumb['url'],
 				);
 			},
