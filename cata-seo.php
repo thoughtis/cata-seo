@@ -41,3 +41,12 @@ new Jetpack_Settings\Share_Image();
 require_once __DIR__ . '/includes/robots/class-robots.php';
 
 new Robots();
+
+/**
+ * Descriptions and Sitemaps
+ */
+require_once __DIR__ . '/includes/jetpack-settings/description/class-description.php';
+require_once __DIR__ . '/includes/jetpack-settings/sitemaps/class-sitemaps.php';
+
+new Jetpack_Settings\Description();
+new Jetpack_Settings\Sitemaps();
