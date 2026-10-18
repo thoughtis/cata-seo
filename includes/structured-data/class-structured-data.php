@@ -66,9 +66,9 @@ class Structured_Data {
 			/**
 			 * Whether to emit WebSite data and identify its Organization publisher.
 			 *
-			 * @param bool $enabled Whether the site opts into the WebSite schema.
+			 * @param bool $enabled Whether the site emits the WebSite schema.
 			 */
-			if ( apply_filters( 'cata_seo_website_schema', false ) ) {
+			if ( apply_filters( 'cata_seo_website_schema', true ) ) {
 				$home_url          = home_url( '/' );
 				$structured_data[] = array(
 					'@context'  => 'https://schema.org',
@@ -90,7 +90,7 @@ class Structured_Data {
 			 * @param bool $requires_image Whether a featured image is required.
 			 * @param int  $post_id        The current post ID.
 			 */
-			$requires_image = apply_filters( 'cata_seo_article_requires_image', true, get_the_ID() );
+			$requires_image = apply_filters( 'cata_seo_article_requires_image', false, get_the_ID() );
 
 			if ( has_post_thumbnail() || ! $requires_image ) {
 				$structured_data = [ ...$structured_data, ...self::get_post_data() ];
@@ -112,17 +112,17 @@ class Structured_Data {
 	 * @return array
 	 */
 	public static function get_organization_data(): array {
-		$blog_info     = get_bloginfo();
-		$icon_url      = get_site_icon_url();
-		$home_url      = get_home_url();
-		$founding_date = self::get_oldest_post_date();
+		$blog_info = get_bloginfo();
+		$icon_url  = get_site_icon_url();
+		$home_url  = get_home_url();
 
+		// The parent's legal name is not each site's alternate name, and the oldest
+		// post is not a founding date: sites add verified facts through the filter below.
 		$org_data = array(
 			array(
 				'@context'      => 'https://schema.org',
 				'@type'         => 'Organization',
 				'name'          => $blog_info,
-				'alternateName' => 'The Thought & Expression Company, Inc.',
 				'url'           => $home_url,
 				'logo'          => $icon_url,
 				'parentOrganization' => array(
@@ -131,7 +131,6 @@ class Structured_Data {
 					'url'   => 'https://thoughtcatalog.com',
 					'logo'  => 'https://thoughtcatalog.com/wp-content/uploads/2020/09/cropped-favicon-512x512-1-1.png'
 				),
-				'foundingDate' => $founding_date,
 				'founders' => array(
 					array(
 						'@type'    => 'Person',
@@ -157,7 +156,7 @@ class Structured_Data {
 		);
 
 		/** This filter is documented in get_structured_data(). */
-		if ( apply_filters( 'cata_seo_website_schema', false ) ) {
+		if ( apply_filters( 'cata_seo_website_schema', true ) ) {
 			$org_data[0]['@id'] = home_url( '/' ) . '#organization';
 		}
 
@@ -270,35 +269,6 @@ class Structured_Data {
 				'itemListElement' => $breadcrumb_list,
 			),
 		);
-	}
-
-	/**
-	 * Get Oldest Post Date
-	 *
-	 * Gets the publish date of the oldest post
-	 *
-	 * @return string
-	 */
-	public static function get_oldest_post_date(): string {
-		$query = new \WP_Query( 
-			array(
-				'orderby'        => 'post_date',
-				'post_type'      => 'post',
-				'posts_per_page' => '1',
-				'order'          => 'ASC',
-				'no_found_rows'  => true,
-			)
-		);
-
-		if( ! $query->have_posts() ) {
-			return '';
-		}
-
-		$query->the_post();
-		$post_date = get_the_date( 'Y-m-d' );
-		wp_reset_postdata();
-		
-		return $post_date;
 	}
 
 	/** 
